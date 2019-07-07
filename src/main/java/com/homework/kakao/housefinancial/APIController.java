@@ -33,8 +33,8 @@ public class APIController {
     }
 
     @GetMapping(value = "avg")
-    public AvgAmountDto getAvgAmount(){
-        return apiService.getAvgMinMax("외환은행");
+    public AvgAmountDto getAvgAmount(@RequestParam String bank){
+        return apiService.getAvgMinMax(bank);
     }
 
     @GetMapping(value = "predict")

@@ -3,7 +3,6 @@ package com.homework.kakao.housefinancial.common.util;
 import com.homework.kakao.housefinancial.model.pojo.CsvRecord;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
-import org.springframework.validation.BindException;
 
 public class CsvFieldSetMapper extends BeanWrapperFieldSetMapper {
     @Override

@@ -88,7 +88,11 @@ public class APIService {
 
     @Transactional(readOnly = true)
     public AvgAmountDto getAvgMinMax(String bank){
-        return AvgAmountDto.of(bank, annualAmountRepo.findAllByInstitute(findInstituteByName(bank)));
+        Institute institute = findInstituteByName(bank);
+
+        return AvgAmountDto.of(bank
+                , annualAmountRepo.findAllbyMinAvgAmountAndInstitute(institute.getInstituteSeq())
+                , annualAmountRepo.findAllbyMaxAvgAmountAndInstitute(institute.getInstituteSeq()));
     }
 
     @Transactional(readOnly = true)

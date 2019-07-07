@@ -1,5 +1,6 @@
 package com.homework.kakao.housefinancial.model.entity;
 
+import com.homework.kakao.housefinancial.model.pojo.YearAndAmount;
 import com.homework.kakao.housefinancial.model.pojo.YearAndBank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,6 +56,10 @@ public class AnnualAmount extends Base {
 
     public YearAndBank toYearBank(){
         return new YearAndBank(year, getInstituteName());
+    }
+
+    public YearAndAmount toYearAmount(){
+        return new YearAndAmount(year, amountAvg);
     }
 }
 

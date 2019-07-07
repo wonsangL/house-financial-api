@@ -29,7 +29,7 @@ git clone https://github.com/wonsangL/house-financial-api.git
 | 주택금융 공급 금융기관 목록을 출력 | [GET]<br>/institutes | - | [ <br>&nbsp;&nbsp;&nbsp;"주택도시기금",<br>&nbsp;&nbsp;&nbsp;"국민은행",<br>&nbsp;&nbsp;&nbsp;"우리은행",<br>&nbsp;&nbsp;&nbsp;"신한은행",<br>&nbsp;&nbsp;&nbsp;"한국시티은행",<br>&nbsp;&nbsp;&nbsp;"하나은행",<br>&nbsp;&nbsp;&nbsp;"농협은행/수협은행",<br>&nbsp;&nbsp;&nbsp;"외환은행",<br>&nbsp;&nbsp;&nbsp;"기타은행"<br>]|
 | 년도별 각 금융기관의 지원금액 합계를 출력 | [GET]<br>/annual | - | {<br>&nbsp;&nbsp;&nbsp;"name": "주택금융 공급현황",<br>&nbsp;&nbsp;&nbsp;"annualDetails": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"year": "2005년",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"totalAmount": 48016,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"detailAmount": {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"하나은행": 3122,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"농협은행/수협은행": 1486,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"우리은행": 2303,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"국민은행": 13231,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"신한은행": 1815,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"주택도시기금": 22247,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"외환은행": 1732,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"한국시티은행": 704,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"기타은행": 1376<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;]<br>} |
 | 각 년도별 각 기관의 전체 지원금액 중<br> 가장 큰 금액의 기관명을 출력 | [GET]<br>/max | - | {<br>&nbsp;&nbsp;&nbsp;"maxAmount": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"year": 2014,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"bank": "주택도시기금"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;]<br>} |
-| 전체 년도에서 외환은행의 지원금액 평균 중<br> 가장 작은 금액과 큰 금액을 출력 | [GET]<br>/avg | - | {<br>&nbsp;&nbsp;&nbsp;"bank": "외환은행",<br>&nbsp;&nbsp;&nbsp;"supportMinAmount": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"year": 2017,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"amount": 0<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;],<br>&nbsp;&nbsp;&nbsp;"supportMaxAmount": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"year": 2015,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"amount": 1702<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;]<br>} |
+| 전체 년도에서 외환은행의 지원금액 평균 중<br> 가장 작은 금액과 큰 금액을 출력 | [GET]<br>/avg?bank=[은행] | - | {<br>&nbsp;&nbsp;&nbsp;"bank": "외환은행",<br>&nbsp;&nbsp;&nbsp;"supportMinAmount": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"year": 2017,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"amount": 0<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;],<br>&nbsp;&nbsp;&nbsp;"supportMaxAmount": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"year": 2015,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"amount": 1702<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;]<br>} |
 | 특정 은행의 특정 달에 대해서<br>2018 년도 금융지원 금액을 예측 | [GET]<br>/predict | {<br>&nbsp;&nbsp;&nbsp;"bank":"국민은행",<br>&nbsp;&nbsp;&nbsp;"month": 2<br>} | {<br>&nbsp;&nbsp;&nbsp;"bank": "bank00",<br>&nbsp;&nbsp;&nbsp;"year": 2018,<br>&nbsp;&nbsp;&nbsp;"month": 2,<br>&nbsp;&nbsp;&nbsp;"amount": 2301<br>} |
 
 ## 문제해결
@@ -120,21 +120,76 @@ public long execute(int year, int month){
 }
 ```
 
-### Csv 파일 저장
+### CSV 파일 저장
 #### Requirement
 <u>**데이터 파일**</u>에서 각 레코드를 데이터베이스에 저장하는 <u>**API 개발**</u>
 
 #### Problem
-파일을 읽고 쓰는 기능을 API로 구현할 경우
+1. 파일을 읽고 쓰는 기능을 API로 구현할 경우
 
-API를 호출할 때마다 동일한 기능을 반복,
+    API를 호출할 때마다 동일한 기능을 반복,
 
-이미 데이터가 저장된 이후라면 불필요한 동작이 반복
+    이미 데이터가 저장된 이후라면 불필요한 동작이 반복될 수 있으며
 
-또한 도중에 에러가 발생할 경우 CSV를 다시 처음부터 읽어야하는 문제점이 있음
+    도중에 에러가 발생할 경우 파일을 다시 처음부터 읽어야하는 문제점이 있음
+    
+2. 금융기관(은행)이 추가될 수 있는 유연한 구조가 필요
+3. CSV 데이터 형식
+    비어있는 column, " "가 포함된 데이터 등
+4. 지원금액과 지원금액의 평균의 경우 가장 높은 금액, 낮은 금액에 해당하는 데이터가 여러 개일 수 있음
 
 #### Solution
-Spring Batch를 활용하여 해당 기능을 구현
+1. Spring Batch를 활용하여 해당 기능을 구현
 
-(하지만 문서에는 API 구현이 명시되어있기 때문에 Batch와 API, 모두 구현)
+    (하지만 문서에는 API 구현이 명시되어있기 때문에 Batch와 API, 모두 구현)
+    
+2. Enum을 활용하여 금융기관(은행) 관리
+3. Batch: `CsvFieldSetMapper`와 `CsvLineTokenizer` 정의
+    
+    API: `OpenCsv`를 활용
+4. 해당 문제를 위한 Query와 Response 형식 정의
+    
+    Query
+    ```java
+    @Query(value = "SELECT * FROM annual_amount WHERE total_amount = (SELECT MAX(total_amount) FROM annual_amount)"
+                , nativeQuery = true)
+        List<AnnualAmount> findAllByMaxAmount();
+    
+        @Query(value = "SELECT * FROM annual_amount WHERE amount_avg = (SELECT MAX(amount_avg) FROM annual_amount WHERE institute_seq = ?1)"
+                , nativeQuery = true)
+        List<AnnualAmount> findAllbyMaxAvgAmountAndInstitute(long instituteSeq);
+    
+        @Query(value = "SELECT * FROM annual_amount WHERE amount_avg = (SELECT MIN(amount_avg) FROM annual_amount WHERE institute_seq = ?1)"
+                , nativeQuery = true)
+        List<AnnualAmount> findAllbyMinAvgAmountAndInstitute(long instituteSeq);
+    ```
+    
+    Response
+    ```json
+    {
+        "bank": "외환은행",
+        "supportMinAmount": [
+            {
+                "year": 2012,
+                "amount": 0
+            },
+            {
+                "year": 2017,
+                "amount": 0
+            }
+        ],
+        "supportMaxAmount": [
+            {
+                "year": 2015,
+                "amount": 1702
+            }
+        ]
+    }
+
+    ```
+     
+
+
+
+
 

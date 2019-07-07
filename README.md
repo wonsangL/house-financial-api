@@ -151,15 +151,19 @@ public long execute(int year, int month){
     
     Query
     ```java
-    @Query(value = "SELECT * FROM annual_amount WHERE total_amount = (SELECT MAX(total_amount) FROM annual_amount)"
+     @Query(value = "SELECT * FROM annual_amount WHERE total_amount = (SELECT MAX(total_amount) FROM annual_amount)"
                 , nativeQuery = true)
         List<AnnualAmount> findAllByMaxAmount();
     
-        @Query(value = "SELECT * FROM annual_amount WHERE amount_avg = (SELECT MAX(amount_avg) FROM annual_amount WHERE institute_seq = ?1)"
+        @Query(value = "SELECT * FROM annual_amount " +
+                "WHERE amount_avg = (SELECT MAX(amount_avg) FROM annual_amount WHERE institute_seq = ?1) " +
+                "AND institute_seq = ?1"
                 , nativeQuery = true)
         List<AnnualAmount> findAllbyMaxAvgAmountAndInstitute(long instituteSeq);
     
-        @Query(value = "SELECT * FROM annual_amount WHERE amount_avg = (SELECT MIN(amount_avg) FROM annual_amount WHERE institute_seq = ?1)"
+        @Query(value = "SELECT * FROM annual_amount " +
+                "WHERE amount_avg = (SELECT MIN(amount_avg) FROM annual_amount WHERE institute_seq = ?1) " +
+                "AND institute_seq = ?1"
                 , nativeQuery = true)
         List<AnnualAmount> findAllbyMinAvgAmountAndInstitute(long instituteSeq);
     ```

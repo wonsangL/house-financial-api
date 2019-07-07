@@ -22,11 +22,15 @@ public interface AnnualAmountRepository extends CrudRepository<AnnualAmount, Lon
             , nativeQuery = true)
     List<AnnualAmount> findAllByMaxAmount();
 
-    @Query(value = "SELECT * FROM annual_amount WHERE amount_avg = (SELECT MAX(amount_avg) FROM annual_amount WHERE institute_seq = ?1)"
+    @Query(value = "SELECT * FROM annual_amount " +
+            "WHERE amount_avg = (SELECT MAX(amount_avg) FROM annual_amount WHERE institute_seq = ?1) " +
+            "AND institute_seq = ?1"
             , nativeQuery = true)
     List<AnnualAmount> findAllbyMaxAvgAmountAndInstitute(long instituteSeq);
 
-    @Query(value = "SELECT * FROM annual_amount WHERE amount_avg = (SELECT MIN(amount_avg) FROM annual_amount WHERE institute_seq = ?1)"
+    @Query(value = "SELECT * FROM annual_amount " +
+            "WHERE amount_avg = (SELECT MIN(amount_avg) FROM annual_amount WHERE institute_seq = ?1) " +
+            "AND institute_seq = ?1"
             , nativeQuery = true)
     List<AnnualAmount> findAllbyMinAvgAmountAndInstitute(long instituteSeq);
 }

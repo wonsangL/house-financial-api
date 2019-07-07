@@ -17,6 +17,11 @@
 #git
 git clone https://github.com/wonsangL/house-financial-api.git
 
+#MySQL
+1. CREATE DATABASE house_financial
+2. Batch metadata table 생성
+   (Schema: https://github.com/spring-projects/spring-batch/blob/master/spring-batch-core/src/main/resources/org/springframework/batch/core/schema-mysql.sql)
+
 #Using Intellij
 1. Sync gradle
 2. annotation processing 활성화

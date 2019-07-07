@@ -32,6 +32,12 @@ git clone https://github.com/wonsangL/house-financial-api.git
 | 전체 년도에서 외환은행의 지원금액 평균 중<br> 가장 작은 금액과 큰 금액을 출력 | [GET]<br>/avg?bank=[은행] | - | {<br>&nbsp;&nbsp;&nbsp;"bank": "외환은행",<br>&nbsp;&nbsp;&nbsp;"supportMinAmount": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"year": 2017,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"amount": 0<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;],<br>&nbsp;&nbsp;&nbsp;"supportMaxAmount": [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"year": 2015,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"amount": 1702<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;]<br>} |
 | 특정 은행의 특정 달에 대해서<br>2018 년도 금융지원 금액을 예측 | [GET]<br>/predict | {<br>&nbsp;&nbsp;&nbsp;"bank":"국민은행",<br>&nbsp;&nbsp;&nbsp;"month": 2<br>} | {<br>&nbsp;&nbsp;&nbsp;"bank": "bank00",<br>&nbsp;&nbsp;&nbsp;"year": 2018,<br>&nbsp;&nbsp;&nbsp;"month": 2,<br>&nbsp;&nbsp;&nbsp;"amount": 2301<br>} |
 
+#### Fail Response
+| description | API | status | 
+|-------------|-----|---------------|
+| 잘못된 금융기관(은행) 이름 | [GET]<br>avg?bank=[은행] | Bad Request 400 |
+
+
 ## 문제해결
 ### 금융지원 금액을 예측 모델
 #### Gradient descent를 활용한 Linear regression

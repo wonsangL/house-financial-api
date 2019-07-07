@@ -6,9 +6,11 @@
 - Java 8
 - Spring 5.1.8
 - Spring Boot 2.1.6
+- Spring Batch 4.1.2
 - JPA, Hibernate
 - MySQL
 - Lombok
+- OpenCsv
 
 ## 빌드 및 실행 방법
 ```bash

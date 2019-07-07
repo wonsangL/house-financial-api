@@ -52,25 +52,30 @@ public class APIServiceTest {
 
     @Test
     public void getAvgMinMax() {
-        AnnualAmount max = new AnnualAmount();
-        max.setYear(2019);
-        max.setAmountAvg(1000);
+        AnnualAmount maxAnnualAmount = new AnnualAmount();
+        maxAnnualAmount.setYear(2019);
+        maxAnnualAmount.setAmountAvg(1000);
 
-        AnnualAmount min = new AnnualAmount();
-        min.setYear(2019);
-        min.setAmountAvg(0);
+        List<AnnualAmount> max = Collections.singletonList(maxAnnualAmount);
 
-        List<AnnualAmount> annualAmounts = Arrays.asList(max, min);
-        when(annualAmountRepo.findAllByInstitute(any())).thenReturn(annualAmounts);
+        AnnualAmount minAnnualAmount = new AnnualAmount();
+        minAnnualAmount.setYear(2019);
+        minAnnualAmount.setAmountAvg(0);
 
-        Assert.assertEquals( max.getAmountAvg(),
+        List<AnnualAmount> min = Collections.singletonList(minAnnualAmount);
+
+        when(apiService.findInstituteByName("국민은행")).thenReturn(new Institute());
+        when(annualAmountRepo.findAllbyMinAvgAmountAndInstitute(anyLong())).thenReturn(min);
+        when(annualAmountRepo.findAllbyMaxAvgAmountAndInstitute(anyLong())).thenReturn(max);
+
+        Assert.assertEquals( maxAnnualAmount.getAmountAvg(),
                 apiService.getAvgMinMax("국민은행").getSupportMaxAmount().get(0).getAmount());
-        Assert.assertEquals( max.getYear(),
+        Assert.assertEquals( maxAnnualAmount.getYear(),
                 apiService.getAvgMinMax("국민은행").getSupportMaxAmount().get(0).getYear());
 
-        Assert.assertEquals( min.getAmountAvg(),
+        Assert.assertEquals( minAnnualAmount.getAmountAvg(),
                 apiService.getAvgMinMax("국민은행").getSupportMinAmount().get(0).getAmount());
-        Assert.assertEquals( min.getYear(),
+        Assert.assertEquals( minAnnualAmount.getYear(),
                 apiService.getAvgMinMax("국민은행").getSupportMinAmount().get(0).getYear());
 
     }
